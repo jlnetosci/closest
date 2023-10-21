@@ -37,7 +37,7 @@ def custom_style(title_text):
         <style>
         .custom-title {
             font-family: 'Saira Condensed', sans-serif;
-            font-size: 40px;
+            font-size: 35px;
             text-align: center;
         }
         </style>
@@ -56,6 +56,8 @@ logo_path = f"{BASE_DIR}/img/logo.png"
 st.sidebar.image(logo_path, use_column_width=True)
 st.sidebar.header("Select Date and Time")
 right_now = st.sidebar.toggle('Now')
+date = None
+time = None
 
 # Initialize the 'on' variable with a default value
 on = False
@@ -138,3 +140,9 @@ with col2:
                     st.markdown(custom_style(f"<b>{closest_planet}</b>!"), unsafe_allow_html=True)
             else:
                 st.error("Please select a date.")
+
+    if not (date or time or right_now):
+        st.warning("""If you are on mobile:  
+            1. please open the selection menu by pressing ">" on the top left of the screen.  
+            2. After pressing calculate close the selection by pressing "x"
+            """)
