@@ -45,10 +45,10 @@ def custom_style(title_text):
 
     return f'{style} <div class="custom-title">{title_text}</div>'
 
-## Include the Google Fonts link
-#st.markdown("""
-#    <link href="https://fonts.googleapis.com/css2?family=Saira Condensed&display=swap" rel="stylesheet">
-#    """, unsafe_allow_html=True)
+# Include the Google Fonts link
+st.markdown("""
+    <link href="https://fonts.googleapis.com/css2?family=Saira Condensed&display=swap" rel="stylesheet">
+    """, unsafe_allow_html=True)
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 logo_path = f"{BASE_DIR}/img/logo.png"
