@@ -50,7 +50,7 @@ st.markdown("""
     <link href="https://fonts.googleapis.com/css2?family=Saira Condensed&display=swap" rel="stylesheet">
     """, unsafe_allow_html=True)
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 logo_path = f"{BASE_DIR}/img/logo.png"
 
 st.sidebar.image(logo_path, use_column_width=True)
