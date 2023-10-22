@@ -1,10 +1,9 @@
 import streamlit as st
 import ephem
 import datetime
-#import time as t
 import os
 
-def calculate_closest_planet(date, time):
+def calculate_closest_planet(date, time=None):
     if time is not None:
         target_date_time = ephem.localtime(ephem.Date(f"{date} {time}"))
     else:
@@ -51,98 +50,32 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-logo_path = f"{BASE_DIR}/img/logo.png"
+logo_path = f"{BASE_DIR}/img/logo_wide.png"
 
-st.sidebar.image(logo_path, use_column_width=True)
-st.sidebar.header("Select Date and Time")
-right_now = st.sidebar.toggle('Now')
-date = None
-time = None
+st.image(logo_path, use_column_width=True)
 
-# Initialize the 'on' variable with a default value
-on = False
+container = st.container()
+query = st.date_input(":calendar: Date", None, min_value=datetime.date(1900, 1, 1), max_value=datetime.date(2100, 12, 31))
 
-# Define current_date and current_time here
-current_date = datetime.date.today()
-current_datetime = datetime.datetime.now()  # Current date and time
-current_date_time = current_datetime.replace(second=0, microsecond=0)  # Round to the minute
-
-col1, col2, col3 = st.columns([1,4,1])
-
-if not right_now:
-    date = st.sidebar.date_input(":calendar: Date", None, min_value=datetime.date(1900, 1, 1), max_value=datetime.date(2100, 12, 31))
-    on = st.sidebar.checkbox('Select time')
-
-    if on:
-        time = st.sidebar.time_input(":mantelpiece_clock: Time", None, step=60)
+if st.button("Calculate"):
+    # determine closest planet
+    closest_planet = calculate_closest_planet(query)
+    
+    # define verb tense 
+    if query < datetime.date.today():
+        verb_tense = "was"
+    elif query == datetime.date.today():
+        verb_tense = "is"
     else:
-        time = None
-with col2:
-    if st.sidebar.button("Calculate"):
-        if right_now:
-            date = current_date
-            time = current_datetime.strftime("%H:%M")
-            verb_tense = "is"
-            closest_planet = calculate_closest_planet(date, time)
-            date_formatted = date.strftime("%B %d, %Y")  # Format date as "April 22, 1987"
-            st.markdown(
-                custom_style(f"The closest planet to Earth on <br> {date_formatted} at {time} {verb_tense}"),
-                unsafe_allow_html=True
-            )
+        verb_tense = "will be"
 
-            st.image(f"{BASE_DIR}/img/{str.lower(closest_planet)}.png", use_column_width=True)
-    #        st.markdown(
-    #            custom_style(f'<img src="{BASE_DIR}/img/{str.lower(closest_planet)}.png" width="500">', center_image=False),
-    #            unsafe_allow_html=True
-    #        )
+    # transform date to chosen format 
+    date_formatted = query.strftime("%B %-d, %Y")  # Format date as "Month day, year"
 
-            st.markdown(custom_style(f"<b>{closest_planet}</b>!"), unsafe_allow_html=True)
-        else:        
-            if date:
-                if on:
-                    if time is not None:
-                        selected_date_time = datetime.datetime.combine(date, time)
-                        if selected_date_time < current_date_time:
-                            verb_tense = "was"
-                        elif selected_date_time == current_date_time:
-                            verb_tense = "is"
-                        else:
-                            verb_tense = "will be"
-                        closest_planet = calculate_closest_planet(date, time)
-                        date_formatted = date.strftime("%B %d, %Y")  # Format date as "April 22, 1987"
-                        time_formatted = time.strftime("%H:%M")  # Format time as HH:MM
-                        #with st.spinner(Calculating...'):
-                        #    t.sleep(1)
-                        st.markdown(
-                            custom_style(f"The closest planet to Earth on {date_formatted} at {time_formatted} {verb_tense}"),
-                            unsafe_allow_html=True
-                        )
-                        st.image(f"{BASE_DIR}/img/{str.lower(closest_planet)}.png", use_column_width=True)
-                        st.markdown(custom_style(f"<b>{closest_planet}</b>!"), unsafe_allow_html=True)
-                    else:
-                        st.error("Please select a time.")
-                elif not on:
-                    if date < current_date:
-                        verb_tense = "was"
-                    elif date == current_date:
-                        verb_tense = "is"
-                    else:
-                        verb_tense = "will be"
-                    closest_planet = calculate_closest_planet(date, time)
-                    date_formatted = date.strftime("%B %d, %Y")  # Format date as "April 22, 1987"
-                    #with st.spinner('Calculating...'):
-                    #    t.sleep(1)
-                    st.markdown(
-                        custom_style(f"The closest planet to Earth on {date_formatted} {verb_tense}"),
-                        unsafe_allow_html=True
-                    )
-                    st.image(f"{BASE_DIR}/img/{str.lower(closest_planet)}.png", use_column_width=True)
-                    st.markdown(custom_style(f"<b>{closest_planet}</b>!"), unsafe_allow_html=True)
-            else:
-                st.error("Please select a date.")
-
-    if not (date or time or right_now):
-        st.warning("""If you are on mobile:  
-            1. please open the selection menu by pressing ">" on the top left of the screen.  
-            2. After pressing calculate close the selection by pressing "x"
-            """)
+    # display information
+    container.markdown(
+        custom_style(f"The closest planet to Earth on {date_formatted} {verb_tense}"),
+        unsafe_allow_html=True
+        )
+    container.image(f"{BASE_DIR}/img/{str.lower(closest_planet)}_wide.png", use_column_width=True)
+    container.markdown(custom_style(f"<b>{closest_planet}</b>!"), unsafe_allow_html=True)
