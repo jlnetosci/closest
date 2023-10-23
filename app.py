@@ -2,6 +2,7 @@ import streamlit as st
 import ephem
 import datetime
 import os
+import base64
 
 def calculate_closest_planet(date, time=None):
     if time is not None:
@@ -50,7 +51,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-logo_path = f"{BASE_DIR}/img/logo_wide.png"
+logo_path = f"{BASE_DIR}/img/logo_url_wide.png"
 
 st.image(logo_path, use_column_width=True)
 
@@ -70,7 +71,7 @@ if st.button("Calculate"):
         date_formatted = query.strftime("%B %-d, %Y")  # Format date as "Month day, year"
         # display information
         container.markdown(
-            custom_style(f"The closest planet to Earth on {date_formatted} {verb_tense}"),
+            custom_style(f"The closest planet to Earth <br> on {date_formatted} {verb_tense}"),
             unsafe_allow_html=True
             )
         container.image(f"{BASE_DIR}/img/{str.lower(closest_planet)}_wide.png", use_column_width=True)
@@ -93,10 +94,30 @@ if st.button("Calculate"):
 
             # display information
             container.markdown(
-                custom_style(f"The closest planet to Earth on {date_formatted} {verb_tense}"),
+                custom_style(f"The closest planet to Earth <br> on {date_formatted} {verb_tense}"),
                 unsafe_allow_html=True
                 )
             container.image(f"{BASE_DIR}/img/{str.lower(closest_planet)}_wide.png", use_column_width=True)
             container.markdown(custom_style(f"<b>{closest_planet}</b>!"), unsafe_allow_html=True)
         else:
             container.error("Please select a date.")
+
+
+def get_base64(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+def set_background(png_file):
+    bin_str = get_base64(png_file)
+    page_bg_img = '''
+    <style>
+    .stApp {
+    background-image: url("data:image/png;base64,%s");
+    background-size: cover;
+    }
+    </style>
+    ''' % bin_str
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+
+set_background(f"{BASE_DIR}/img/bg.png")
