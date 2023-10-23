@@ -55,27 +55,48 @@ logo_path = f"{BASE_DIR}/img/logo_wide.png"
 st.image(logo_path, use_column_width=True)
 
 container = st.container()
-query = st.date_input(":calendar: Date", None, min_value=datetime.date(1900, 1, 1), max_value=datetime.date(2100, 12, 31))
+
+right_now = st.toggle('Today')
+
+if not right_now:
+    query = st.date_input(":calendar: Date", None, min_value=datetime.date(1900, 1, 1), max_value=datetime.date(2100, 12, 31))
 
 if st.button("Calculate"):
-    # determine closest planet
-    closest_planet = calculate_closest_planet(query)
-    
-    # define verb tense 
-    if query < datetime.date.today():
-        verb_tense = "was"
-    elif query == datetime.date.today():
+    if right_now:
+        query = datetime.date.today()
+        closest_planet = calculate_closest_planet(query)
         verb_tense = "is"
+        # transform date to chosen format 
+        date_formatted = query.strftime("%B %-d, %Y")  # Format date as "Month day, year"
+        # display information
+        container.markdown(
+            custom_style(f"The closest planet to Earth on {date_formatted} {verb_tense}"),
+            unsafe_allow_html=True
+            )
+        container.image(f"{BASE_DIR}/img/{str.lower(closest_planet)}_wide.png", use_column_width=True)
+        container.markdown(custom_style(f"<b>{closest_planet}</b>!"), unsafe_allow_html=True)
     else:
-        verb_tense = "will be"
+        if query:
+            # determine closest planet
+            closest_planet = calculate_closest_planet(query)
+            
+            # define verb tense 
+            if query < datetime.date.today():
+                verb_tense = "was"
+            elif query == datetime.date.today():
+                verb_tense = "is"
+            else:
+                verb_tense = "will be"
 
-    # transform date to chosen format 
-    date_formatted = query.strftime("%B %-d, %Y")  # Format date as "Month day, year"
+            # transform date to chosen format 
+            date_formatted = query.strftime("%B %-d, %Y")  # Format date as "Month day, year"
 
-    # display information
-    container.markdown(
-        custom_style(f"The closest planet to Earth on {date_formatted} {verb_tense}"),
-        unsafe_allow_html=True
-        )
-    container.image(f"{BASE_DIR}/img/{str.lower(closest_planet)}_wide.png", use_column_width=True)
-    container.markdown(custom_style(f"<b>{closest_planet}</b>!"), unsafe_allow_html=True)
+            # display information
+            container.markdown(
+                custom_style(f"The closest planet to Earth on {date_formatted} {verb_tense}"),
+                unsafe_allow_html=True
+                )
+            container.image(f"{BASE_DIR}/img/{str.lower(closest_planet)}_wide.png", use_column_width=True)
+            container.markdown(custom_style(f"<b>{closest_planet}</b>!"), unsafe_allow_html=True)
+        else:
+            container.error("Please select a date.")
