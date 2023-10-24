@@ -4,6 +4,69 @@ import datetime
 import os
 import base64
 
+#### Configuration
+st.set_page_config(
+   page_title="Closest",
+   page_icon="🌌"
+   )
+
+# Do not display header
+hide_header = """
+            <style>
+            header {visibility: hidden;}
+            </style>
+"""
+
+# Do not display footer
+hide_footer = """
+            <style>
+            footer {visibility: hidden;}
+            </style>
+"""
+
+st.markdown(hide_header, unsafe_allow_html=True)
+st.markdown(hide_footer, unsafe_allow_html=True) 
+
+#### Configuration functions
+
+def get_base64(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+def set_background(png_file):
+    bin_str = get_base64(png_file)
+    page_bg_img = '''
+    <style>
+    .stApp {
+    background-image: url("data:image/png;base64,%s");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    }
+    </style>
+    ''' % bin_str
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+
+def custom_style(title_text):
+    style = """
+        <style>
+        .custom-title {
+            font-family: 'Saira Condensed', sans-serif;
+            font-size: 35px;
+            text-align: center;
+        }
+        </style>
+    """
+
+    return f'{style} <div class="custom-title">{title_text}</div>'
+
+# Include the Google Fonts link for custom_style
+st.markdown("""
+    <link href="https://fonts.googleapis.com/css2?family=Saira Condensed&display=swap" rel="stylesheet">
+    """, unsafe_allow_html=True)
+
+#### Calculation functions
 def calculate_closest_planet(date, time=None):
     if time is not None:
         target_date_time = ephem.localtime(ephem.Date(f"{date} {time}"))
@@ -32,38 +95,20 @@ def calculate_closest_planet(date, time=None):
 
     return closest_planet
 
-def custom_style(title_text):
-    style = """
-        <style>
-        .custom-title {
-            font-family: 'Saira Condensed', sans-serif;
-            font-size: 35px;
-            text-align: center;
-        }
-        </style>
-    """
-
-    return f'{style} <div class="custom-title">{title_text}</div>'
-
-# Include the Google Fonts link
-st.markdown("""
-    <link href="https://fonts.googleapis.com/css2?family=Saira Condensed&display=swap" rel="stylesheet">
-    """, unsafe_allow_html=True)
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-logo_path = f"{BASE_DIR}/img/logo_url_wide.png"
+logo_path = f"{BASE_DIR}/img/logo_url_corner_wide.png"
 
 st.image(logo_path, use_column_width=True)
 
 container = st.container()
 
-right_now = st.toggle('Today')
+today = st.checkbox('Today')
 
-if not right_now:
+if not today:
     query = st.date_input(":calendar: Date", None, min_value=datetime.date(1900, 1, 1), max_value=datetime.date(2100, 12, 31))
 
 if st.button("Calculate"):
-    if right_now:
+    if today:
         query = datetime.date.today()
         closest_planet = calculate_closest_planet(query)
         verb_tense = "is"
@@ -74,7 +119,7 @@ if st.button("Calculate"):
             custom_style(f"The closest planet to Earth <br> on {date_formatted} {verb_tense}"),
             unsafe_allow_html=True
             )
-        container.image(f"{BASE_DIR}/img/{str.lower(closest_planet)}_wide.png", use_column_width=True)
+        container.image(f"{BASE_DIR}/img/{str.lower(closest_planet)}_wide_opaque.png", use_column_width=True)
         container.markdown(custom_style(f"<b>{closest_planet}</b>!"), unsafe_allow_html=True)
     else:
         if query:
@@ -97,27 +142,19 @@ if st.button("Calculate"):
                 custom_style(f"The closest planet to Earth <br> on {date_formatted} {verb_tense}"),
                 unsafe_allow_html=True
                 )
-            container.image(f"{BASE_DIR}/img/{str.lower(closest_planet)}_wide.png", use_column_width=True)
+            container.image(f"{BASE_DIR}/img/{str.lower(closest_planet)}_wide_opaque.png", use_column_width=True)
             container.markdown(custom_style(f"<b>{closest_planet}</b>!"), unsafe_allow_html=True)
         else:
             container.error("Please select a date.")
 
+simple_bg = st.toggle('Simple background')
 
-def get_base64(bin_file):
-    with open(bin_file, 'rb') as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
-
-def set_background(png_file):
-    bin_str = get_base64(png_file)
-    page_bg_img = '''
-    <style>
-    .stApp {
-    background-image: url("data:image/png;base64,%s");
-    background-size: cover;
-    }
-    </style>
-    ''' % bin_str
-    st.markdown(page_bg_img, unsafe_allow_html=True)
-
-set_background(f"{BASE_DIR}/img/bg.png")
+if simple_bg:
+    st.markdown("""<style>
+                .stApp {
+                background-image: linear-gradient(180deg, #63275fff, #0e1118ff, #0e1118ff, #0e1118ff, #0e1118ff, #0e1118ff, #0e1118ff, #0e1118ff, #424991ff, #424991ff);
+                }
+                </style>""", unsafe_allow_html=True
+                )
+else: 
+    set_background(f"{BASE_DIR}/img/bg.jpeg")
