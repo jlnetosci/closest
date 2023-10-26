@@ -152,7 +152,7 @@ simple_bg = st.toggle('Simple background')
 if simple_bg:
     st.markdown("""<style>
                 .stApp {
-                background-image: linear-gradient(180deg, #63275fff, #0e1118ff, #0e1118ff, #0e1118ff, #0e1118ff, #0e1118ff, #0e1118ff, #0e1118ff, #424991ff, #424991ff);
+                background-image: linear-gradient(180deg, #020e40, #0e1118ff, #0e1118ff, #0e1118ff, #0e1118ff, #0e1118ff, #0e1118ff, #0e1118ff, #891c5f);
                 }
                 </style>""", unsafe_allow_html=True
                 )
