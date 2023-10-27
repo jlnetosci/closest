@@ -4,3 +4,6 @@ base = "dark"
 primaryColor="#891c5f"
 secondaryBackgroundColor="#020e40"
 font="sans serif"
+
+[browser]
+gatherUsageStats = false
