@@ -3,6 +3,8 @@ import ephem
 import datetime
 import os
 import base64
+import streamlit_analytics
+from dotenv import load_dotenv
 
 #### Configuration
 st.set_page_config(
@@ -95,6 +97,10 @@ def calculate_closest_planet(date, time=None):
 
     return closest_planet
 
+#### APP
+load_dotenv()
+weather = os.getenv("WEATHER")
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 logo_path = f"{BASE_DIR}/img/logo_url_corner_wide.png"
 
@@ -106,6 +112,8 @@ today = st.checkbox('Today')
 
 if not today:
     query = st.date_input(":calendar: Date", None, min_value=datetime.date(1900, 1, 1), max_value=datetime.date(2100, 12, 31))
+
+streamlit_analytics.start_tracking()
 
 if st.button("Calculate"):
     if today:
@@ -158,3 +166,5 @@ if simple_bg:
                 )
 else: 
     set_background(f"{BASE_DIR}/img/bg.jpeg")
+
+streamlit_analytics.stop_tracking(unsafe_password=weather)
