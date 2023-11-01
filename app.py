@@ -65,7 +65,7 @@ def custom_style(title_text):
 
 # Include the Google Fonts link for custom_style
 st.markdown("""
-    <link href="https://fonts.googleapis.com/css2?family=Saira Condensed&display=swap" rel="stylesheet">
+    <link href="https://fonts.bunny.net/css?family=Saira Condensed&display=swap" rel="stylesheet">
     """, unsafe_allow_html=True)
 
 #### Calculation functions
@@ -102,7 +102,7 @@ load_dotenv()
 weather = os.getenv("WEATHER")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-logo_path = f"{BASE_DIR}/img/logo_url_corner_wide.png"
+logo_path = f"{BASE_DIR}/img/logo_url_corner.png"
 
 st.image(logo_path, use_column_width=True)
 
@@ -115,7 +115,7 @@ if not today:
 
 streamlit_analytics.start_tracking()
 
-if st.button("Calculate"):
+if st.button("Calculate", type="primary"):
     if today:
         query = datetime.date.today()
         closest_planet = calculate_closest_planet(query)
@@ -168,3 +168,5 @@ else:
     set_background(f"{BASE_DIR}/img/bg.jpeg")
 
 streamlit_analytics.stop_tracking(unsafe_password=weather)
+
+st.markdown("<span style='color: #891c5f;'><strong>Author: <a href='https://github.com/jlnetosci' style='color: #891c5f;'>João L. Neto</a> <br> <a href='mailto:closest.app.contact@gmail.com' style='color: #891c5f;'>Contact Me</a></strong></span>", unsafe_allow_html=True)
