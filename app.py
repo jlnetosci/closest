@@ -55,7 +55,7 @@ def custom_style(title_text):
         <style>
         .custom-title {
             font-family: 'Saira Condensed', sans-serif;
-            font-size: 35px;
+            font-size: 30px;
             text-align: center;
         }
         </style>
@@ -102,7 +102,7 @@ load_dotenv()
 weather = os.getenv("WEATHER")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-logo_path = f"{BASE_DIR}/img/logo_url_corner.png"
+logo_path = f"{BASE_DIR}/img/logo_url_corner_wide.png"
 
 st.image(logo_path, use_column_width=True)
 
