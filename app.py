@@ -169,4 +169,4 @@ else:
 
 streamlit_analytics.stop_tracking(unsafe_password=weather)
 
-st.markdown("<span style='color: #891c5f;'><strong>Author: <a href='https://github.com/jlnetosci' style='color: #891c5f;'>João L. Neto</a> <br> <a href='mailto:closest.app.contact@gmail.com' style='color: #891c5f;'>Contact Me</a></strong></span>", unsafe_allow_html=True)
+st.markdown("<span style='color: #891c5f;'><strong>Author: <br> <a href='https://github.com/jlnetosci' style='color: #891c5f;'>João L. Neto</a> <br> <a href='mailto:closest.app.contact@gmail.com' style='color: #891c5f;'>Contact Me</a></strong></span>", unsafe_allow_html=True)
