@@ -14,3 +14,5 @@ This app was inspired by CGP Grey's video [🌍 Which Planet is the Closest? ](h
 2. Press calculate!  
 
 You also have the option of selecting a smoother background.
+
+<b>Note:</b> The app has been developed to look best on a mobile browser. Nonetheless it works and looks acceptable on desktop!
